@@ -171,23 +171,66 @@ const FILTERS = [
    STATE
 --------------------------------------------------------- */
 let watched = new Set();
+let ratings = {}; // { movieId: 1-5 }
 let currentRoute = null;
 let storageReady = false;
 let searchQuery = "";
 let filterKey = "all";
 let searchFocused = false;
 
-async function loadWatched(){
+async function loadAll(){
   try{
-    const res = await window.storage.get('mcu-watched', false);
-    if(res && res.value) watched = new Set(JSON.parse(res.value));
-  }catch(e){ watched = new Set(); }
+    const [w, r] = await Promise.all([
+      window.storage.get('mcu-watched', false).catch(()=>null),
+      window.storage.get('mcu-ratings', false).catch(()=>null)
+    ]);
+    if(w && w.value) watched = new Set(JSON.parse(w.value));
+    if(r && r.value) ratings = JSON.parse(r.value);
+  }catch(e){ /* start empty */ }
   storageReady = true;
   render();
 }
 async function saveWatched(){
   try{ await window.storage.set('mcu-watched', JSON.stringify([...watched]), false); }
   catch(e){ console.error('storage error', e); }
+}
+async function saveRatings(){
+  try{ await window.storage.set('mcu-ratings', JSON.stringify(ratings), false); }
+  catch(e){ console.error('storage error', e); }
+}
+function rateMovie(id, value, ev){
+  if(ev) ev.stopPropagation();
+  if(!watched.has(id)) return;
+  if(ratings[id] === value){ delete ratings[id]; }
+  else ratings[id] = value;
+  saveRatings();
+  render();
+}
+function routeRating(route){
+  const rated = route.ids.filter(id => ratings[id]);
+  if(rated.length===0) return null;
+  const sum = rated.reduce((s,id)=>s+ratings[id],0);
+  return { avg: sum/rated.length, count: rated.length };
+}
+function globalRating(){
+  const ids = Object.keys(MOVIES).filter(id => ratings[id]);
+  if(ids.length===0) return null;
+  const sum = ids.reduce((s,id)=>s+ratings[id],0);
+  return { avg: sum/ids.length, count: ids.length };
+}
+function starsWidget(id){
+  const r = ratings[id] || 0;
+  let s = '<div class="rating-stars" onclick="event.stopPropagation()">';
+  for(let i=1;i<=5;i++){
+    s += `<span class="star ${i<=r?'filled':''}" onclick="rateMovie('${id}', ${i}, event)">★</span>`;
+  }
+  if(r) s += `<span class="rating-value">${r}/5</span>`;
+  s += '</div>';
+  return s;
+}
+function ratingLine(obj){
+  if(!obj) return `<span class="rating-empty">☆ Sin calificaciones aún</span>`;
+  return `<span class="rating-line"><span class="rating-star-ico">★</span> ${obj.avg.toFixed(1)} <span class="rating-count">(${obj.count} calificada${obj.count>1?'s':''})</span></span>`;
 }
 
 function isUnlocked(id){
@@ -218,7 +261,9 @@ function openRoute(id){ currentRoute = id; searchFocused = false; render(); wind
 function goHome(){ currentRoute = null; searchFocused = false; render(); }
 async function resetProgress(){
   watched = new Set();
+  ratings = {};
   await saveWatched();
+  await saveRatings();
   render();
 }
 
@@ -318,6 +363,8 @@ function movieCard(id, showRoutes){
     if(names.length) routeTags = `<div class="route-tags">${names.map(n=>`<span class="route-chip">${n}</span>`).join('')}</div>`;
   }
 
+  const stars = isWatched ? starsWidget(id) : "";
+
   const titleAttr = m.upcoming ? 'Aún no se ha estrenado' : (unlocked || isWatched ? '' : 'Bloqueada: '+missingReq(id).join(', '));
 
   return `<div class="${cls}" title="${titleAttr}" onclick="toggleWatched('${id}', event)">
@@ -326,6 +373,7 @@ function movieCard(id, showRoutes){
     <div class="year">${m.y} · ${fmtHours(m.min)}</div>
     ${tag}
     ${note}
+    ${stars}
     ${routeTags}
   </div>`;
 }
@@ -390,6 +438,7 @@ function render(){
     return;
   }
   const g = globalStats();
+  const gr = globalRating();
 
   const headerHtml = `
     <header>
@@ -404,6 +453,7 @@ function render(){
         <div class="pill">Películas vistas: <b>${g.watchedCount}/${g.total}</b></div>
         <div class="pill">Horas vistas: <b>${fmtHours(g.watchedMin)}</b> / ${fmtHours(g.totalMin)}</div>
         <div class="pill">Rutas completas: <b>${g.routesDone}/${ROUTES.length}</b></div>
+        <div class="pill">Calificación media: <b>${gr ? '★ '+gr.avg.toFixed(1) : '—'}</b>${gr ? ` <span style="opacity:.7">(${gr.count})</span>` : ''}</div>
       </div>
       <div class="progress-outer"><div class="progress-inner" style="width:${g.pct}%"></div></div>
     </header>
@@ -415,6 +465,7 @@ function render(){
       ? searchPanel() + globalSearchResults()
       : searchPanel() + `<div class="route-grid">${ROUTES.map(r=>{
           const s = routeStats(r);
+          const rr = routeRating(r);
           return `<div class="route-card" onclick="openRoute('${r.id}')">
             <h3>${r.name}</h3>
             <p class="tagline">${r.tagline}</p>
@@ -425,6 +476,7 @@ function render(){
               <div class="route-stat"><div class="num">${s.pct}%</div><div class="lbl">Progreso</div></div>
             </div>
             <div class="mini-progress"><div style="width:${s.pct}%"></div></div>
+            <div class="route-rating">${ratingLine(rr)}</div>
           </div>`;
         }).join('')}</div>`;
 
@@ -432,11 +484,12 @@ function render(){
   } else {
     const route = ROUTES.find(r=>r.id===currentRoute);
     const s = routeStats(route);
+    const rr = routeRating(route);
     app.innerHTML = headerHtml + `
       <button class="back-btn" onclick="goHome()">← Todas las rutas</button>
       <div class="route-header">
         <h2>${route.name}</h2>
-        <div class="route-pct">${s.watchedCount}/${s.total} vistas · ${s.pct}%</div>
+        <div class="route-pct">${s.watchedCount}/${s.total} vistas · ${s.pct}% &nbsp;·&nbsp; ${ratingLine(rr)}</div>
       </div>
       <p class="route-tagline">${route.tagline}</p>
       ${searchPanel()}
@@ -456,4 +509,4 @@ function resetRow(){
   return `<div class="reset-row"><button class="reset-btn" onclick="resetProgress()">Reiniciar progreso</button></div>`;
 }
 
-loadWatched();
+loadAll();

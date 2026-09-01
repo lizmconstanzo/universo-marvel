@@ -228,6 +228,23 @@ h1 span{color: var(--gold);}
 .movie-card.free-entry{border-color: rgba(228,0,43,0.35);}
 .free-note{font-size:10.5px; color:var(--text-faint); margin-top:6px; font-style:italic;}
 
+.rating-stars{
+  margin-top:9px; display:flex; align-items:center; gap:2px;
+}
+.rating-stars .star{
+  cursor:pointer; font-size:16px; line-height:1; color: var(--card-border);
+  transition: color .12s ease, transform .1s ease;
+}
+.rating-stars .star:hover{transform: scale(1.2);}
+.rating-stars .star.filled{color: var(--gold);}
+.rating-value{font-size:10.5px; color:var(--text-faint); margin-left:5px;}
+
+.route-rating{margin-top:12px; text-align:center; font-size:12.5px; color:var(--text-dim);}
+.rating-line{display:inline-flex; align-items:center; gap:4px;}
+.rating-star-ico{color:var(--gold);}
+.rating-count{color:var(--text-faint);}
+.rating-empty{color:var(--text-faint); font-style:italic;}
+
 .route-tags{margin-top:9px; display:flex; flex-wrap:wrap; gap:5px;}
 .route-chip{
   font-size:10px; color:var(--text-dim); background:rgba(255,255,255,0.04);
