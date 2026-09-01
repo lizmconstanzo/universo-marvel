@@ -174,6 +174,83 @@ const FILTERS = [
 ];
 
 /* ---------------------------------------------------------
+   ICONS — generic vector nods to each hero/theme (no logos)
+--------------------------------------------------------- */
+const ICONS = {
+  shield:  '<path d="M12 2 L20 6 V11 C20 16.5 16.5 20.5 12 22 C7.5 20.5 4 16.5 4 11 V6 Z"/>',
+  hammer:  '<rect x="6" y="3" width="12" height="6" rx="1"/><line x1="12" y1="9" x2="12" y2="21"/>',
+  arc:     '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/>',
+  burst:   '<circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7.8" y2="7.8"/><line x1="16.2" y1="16.2" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="16.2" y2="7.8"/><line x1="7.8" y1="16.2" x2="4.9" y2="19.1"/>',
+  star:    '<path d="M12 2 L14 9 L21 9 L15.5 13.2 L17.5 20 L12 15.8 L6.5 20 L8.5 13.2 L3 9 L10 9 Z"/>',
+  gem:     '<path d="M12 2 L20 9 L12 22 L4 9 Z"/><line x1="4" y1="9" x2="20" y2="9"/>',
+  atom:    '<ellipse cx="12" cy="12" rx="9" ry="4"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(120 12 12)"/>',
+  panther: '<circle cx="12" cy="15" r="4.2"/><circle cx="6.5" cy="8" r="1.8"/><circle cx="12" cy="5.5" r="1.8"/><circle cx="17.5" cy="8" r="1.8"/>',
+  web:     '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/><line x1="18.5" y1="5.5" x2="5.5" y2="18.5"/>',
+  spiral:  '<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 4"/>',
+  loop:    '<circle cx="8.5" cy="12" r="4"/><circle cx="15.5" cy="12" r="4"/>',
+  rings:   '<circle cx="7" cy="12" r="4.2"/><circle cx="12" cy="12" r="4.2"/><circle cx="17" cy="12" r="4.2"/>',
+  wing:    '<path d="M3 14 C7 8 12 6 21 5 C17 9 15 12 15 12 C15 12 19 13 21 17 C13 17 6 17 3 14 Z"/>',
+  hourglass:'<path d="M6 4h12l-6 8-6-8z"/><path d="M6 20h12l-6-8-6 8z"/>',
+  arrow:   '<line x1="4" y1="20" x2="20" y2="4"/><path d="M12 4h8v8"/>',
+  moon:    '<path d="M15 3a9 9 0 1 0 0 18 7 7 0 1 1 0-18z"/>',
+  claws:   '<line x1="6" y1="4" x2="9" y2="20"/><line x1="11" y1="3" x2="13" y2="20"/><line x1="16" y1="4" x2="18" y2="20"/>',
+  mask:    '<ellipse cx="12" cy="12" rx="9" ry="7"/><path d="M6 11c1.5-1.5 3-2 6-2s4.5.5 6 2"/><path d="M8 15c1.2 1 2.5 1.5 4 1.5s2.8-.5 4-1.5"/>',
+  fangs:   '<path d="M7 3 L9.5 12 L5 12 Z"/><path d="M17 3 L19.5 12 L15 12 Z"/><path d="M12 12 C9 12 7 15 7 18 C9 17 11 17 12 19 C13 17 15 17 17 18 C17 15 15 12 12 12Z"/>',
+  skull:   '<circle cx="12" cy="10" r="7"/><circle cx="9" cy="10" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.4" fill="currentColor" stroke="none"/><path d="M9 16 L10 20 L12 17 L14 20 L15 16"/>',
+  flame:   '<path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1.5-1-2-1-3.5 2 1.5 3 4 3 6.5a5 5 0 0 1-10 0C7 9 9 6 12 2z"/>',
+  crossblades:'<line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>',
+  orbit:   '<circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(20 12 12)"/><circle cx="4.2" cy="9.5" r="1"/><circle cx="20" cy="15" r="1"/>',
+  film:    '<rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="6" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="18"/>'
+};
+
+const ICON_MAP = {
+  iron_man:"arc", iron_man2:"arc", iron_man3:"arc", ironheart:"arc",
+  hulk:"burst", hulk_03:"burst", she_hulk:"burst",
+  thor:"hammer", thor2:"hammer", thor3:"hammer", thor_love:"hammer",
+  cap1:"shield", cap2:"shield", cap3:"shield", cap_brave:"shield",
+  avengers1:"gem", avengers2:"gem", avengers_iw:"gem", avengers_end:"gem", avengers_encore:"gem", thunderbolts:"gem", doomsday:"gem", secret_wars:"gem",
+  gotg1:"orbit", gotg2:"orbit", gotg3:"orbit",
+  antman:"atom", antman2:"atom", antman3:"atom",
+  black_widow:"hourglass",
+  blackpanther:"panther", blackpanther_wf:"panther",
+  spiderman_hc:"web", spiderman_ffh:"web", spiderman_nwh:"web", spiderman_02:"web", spiderman_04:"web", spiderman_07:"web", tasm_1:"web", tasm_2:"web", spiderman_bnd:"web", madame_web:"web",
+  dr_strange:"spiral", dr_strange2:"spiral", wandavision:"spiral", agatha:"spiral",
+  loki_s1:"loop", loki_s2:"loop",
+  shang_chi:"rings",
+  fatws:"wing",
+  hawkeye:"arrow", kraven:"arrow",
+  moon_knight:"moon",
+  captain_marvel:"star", ms_marvel:"star", marvels:"star", eternals:"star",
+  xmen_first:"claws", xmen_1:"claws", xmen_2:"claws", xmen_3:"claws", xmen_origins:"claws", the_wolverine:"claws", xmen_days:"claws", xmen_apocalypse:"claws", dark_phoenix:"claws", logan:"claws", xmen_97:"claws",
+  deadpool_1:"mask", deadpool_2:"mask", deadpool_wolv:"mask",
+  daredevil_03:"mask", daredevil_s1:"mask", daredevil_s2:"mask", daredevil_s3:"mask", daredevil_ba:"mask", defenders:"mask", secret_invasion:"mask",
+  venom_1:"fangs", venom_2:"fangs", venom_3:"fangs", morbius:"fangs", blade_1:"fangs", blade_2:"fangs", blade_trinity:"fangs",
+  ghost_rider:"flame", ghost_rider_2:"flame", ff_05:"flame", ff_07:"flame", ff_steps:"flame",
+  punisher_04:"skull",
+  elektra:"crossblades", echo:"crossblades",
+};
+function iconSvg(id){
+  const key = ICON_MAP[id] || 'film';
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[key]}</svg>`;
+}
+
+const ICON_COLORS = {
+  shield:"#3b82f6", hammer:"#fbbf24", arc:"#22d3ee", burst:"#65a30d",
+  star:"#eab308", gem:"#fb7185", atom:"#2dd4bf", panther:"#a78bfa",
+  web:"#60a5fa", spiral:"#a855f7", loop:"#22c55e", rings:"#d97706",
+  wing:"#93c5fd", hourglass:"#b91c1c", arrow:"#8b5cf6", moon:"#cbd5e1",
+  claws:"#38bdf8", mask:"#ef4444", fangs:"#0f766e", skull:"#94a3b8",
+  flame:"#f97316", crossblades:"#64748b", orbit:"#f472b6", film:"#94949e"
+};
+function iconBadge(id){
+  const key = ICON_MAP[id] || 'film';
+  const color = ICON_COLORS[key] || '#94949e';
+  return `<div class="icon-badge icon-${key}" style="--ic:${color}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[key]}</svg>
+  </div>`;
+}
+
+/* ---------------------------------------------------------
    STATE
 --------------------------------------------------------- */
 let watched = new Set();
@@ -375,6 +452,7 @@ function movieCard(id, showRoutes){
 
   return `<div class="${cls}" title="${titleAttr}" onclick="toggleWatched('${id}', event)">
     ${extra}
+    ${iconBadge(id)}
     <div class="title">${m.t}</div>
     <div class="year">${m.y} · ${fmtHours(m.min)}</div>
     ${tag}

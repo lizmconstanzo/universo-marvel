@@ -230,6 +230,65 @@ h1 span{color: var(--gold);}
 .movie-card.free-entry{border-color: rgba(228,0,43,0.35);}
 .free-note{font-size:10.5px; color:var(--text-faint); margin-top:6px; font-style:italic;}
 
+.icon-badge{
+  --ic: #e4002b;
+  width:38px; height:38px; border-radius:50%;
+  background: color-mix(in srgb, var(--ic) 16%, transparent);
+  border:1.5px solid color-mix(in srgb, var(--ic) 55%, transparent);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:11px;
+  color: var(--ic);
+  transition: transform .3s ease, border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.icon-badge svg{width:19px; height:19px; overflow:visible;}
+.movie-card:hover .icon-badge{
+  transform: rotate(-8deg) scale(1.15);
+  border-color: var(--ic);
+  background: color-mix(in srgb, var(--ic) 32%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--ic) 65%, transparent);
+}
+.movie-card.watched .icon-badge{
+  border-color: var(--ic);
+  background: color-mix(in srgb, var(--ic) 26%, transparent);
+  animation: iconGlow 2.4s ease-in-out infinite;
+}
+.movie-card.locked .icon-badge{opacity:.45; filter:grayscale(.4);}
+
+@keyframes iconGlow{
+  0%, 100%{ box-shadow: 0 0 0 color-mix(in srgb, var(--ic) 0%, transparent); }
+  50%{ box-shadow: 0 0 14px color-mix(in srgb, var(--ic) 75%, transparent); }
+}
+@keyframes spinSlow{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+@keyframes spinFast{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+@keyframes flicker{
+  0%,100%{transform:scale(1) rotate(0deg);}
+  25%{transform:scale(1.08) rotate(-4deg);}
+  50%{transform:scale(0.94) rotate(3deg);}
+  75%{transform:scale(1.05) rotate(-2deg);}
+}
+@keyframes pulseScale{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.18);}
+}
+@keyframes clawSwipe{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(1.5px) scaleY(1.05);}
+}
+.icon-spiral svg, .icon-loop svg, .icon-atom svg, .icon-orbit svg{
+  animation: spinSlow 7s linear infinite;
+  transform-origin:center;
+}
+.icon-flame svg{ animation: flicker 1.6s ease-in-out infinite; transform-origin:50% 90%; }
+.icon-burst svg{ animation: pulseScale 1.8s ease-in-out infinite; transform-origin:center; }
+.icon-arc svg{ animation: spinFast 3.5s linear infinite; transform-origin:center; }
+.icon-claws svg{ animation: clawSwipe 1.4s ease-in-out infinite; }
+.movie-card.locked .icon-spiral svg, .movie-card.locked .icon-loop svg,
+.movie-card.locked .icon-atom svg, .movie-card.locked .icon-orbit svg,
+.movie-card.locked .icon-flame svg, .movie-card.locked .icon-burst svg,
+.movie-card.locked .icon-arc svg, .movie-card.locked .icon-claws svg{
+  animation-play-state: paused;
+}
+
 .rating-stars{
   margin-top:9px; display:flex; align-items:center; gap:2px;
 }
