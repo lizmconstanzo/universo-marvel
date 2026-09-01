@@ -117,7 +117,7 @@ h1 span{color: var(--gold);}
 /* ---- route grid (home) ---- */
 .route-grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap:20px;
   margin-top:44px;
 }
@@ -141,7 +141,9 @@ h1 span{color: var(--gold);}
 }
 .route-card p.tagline{
   color: var(--text-dim); font-size:13.5px; line-height:1.5; margin-bottom:18px;
-  min-height:38px;
+  min-height:61px;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .route-card hr{border:none; border-top:1px solid var(--card-border); margin-bottom:16px;}
 .route-stat-row{display:flex; justify-content:space-between; gap:10px;}
@@ -170,14 +172,14 @@ h1 span{color: var(--gold);}
 
 .phases{
   display:flex; gap:20px; overflow-x:auto; padding-bottom:20px;
-  flex-wrap:wrap;
+  flex-wrap:wrap; justify-content:center;
 }
 .phase-col{
   background: rgba(255,255,255,0.015);
   border:1px solid var(--card-border);
   border-radius: var(--radius);
   padding:22px 18px;
-  min-width:260px; flex:1 0 260px;
+  min-width:260px; max-width:340px; flex:1 0 260px;
 }
 .phase-col h4{
   font-family:'Poppins',sans-serif; font-weight:700; color:var(--gold);

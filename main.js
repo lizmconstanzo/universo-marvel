@@ -154,6 +154,12 @@ const ROUTES = [
     name: "Camino a Doomsday",
     tagline: "Multiverso, variantes y preparativos para las nuevas películas de los Vengadores.",
     ids: ["avengers_end","loki_s1","spiderman_nwh","dr_strange2","antman3","loki_s2","deadpool_wolv","marvels","blackpanther_wf","doomsday","secret_wars"]
+  },
+  {
+    id: "legacy",
+    name: "Marvel Legacy (Pre-MCU)",
+    tagline: "Las películas de Marvel de antes del universo compartido: Blade, Hulk, Daredevil, los 4 Fantásticos y más.",
+    ids: ["blade_1","blade_2","hulk_03","daredevil_03","punisher_04","blade_trinity","elektra","ff_05","ghost_rider","ff_07","ghost_rider_2"]
   }
 ];
 
