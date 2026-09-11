@@ -263,22 +263,20 @@ let searchFocused = false;
 
 async function loadAll(){
   try{
-    const [w, r] = await Promise.all([
-      window.storage.get('mcu-watched', false).catch(()=>null),
-      window.storage.get('mcu-ratings', false).catch(()=>null)
-    ]);
-    if(w && w.value) watched = new Set(JSON.parse(w.value));
-    if(r && r.value) ratings = JSON.parse(r.value);
-  }catch(e){ /* start empty */ }
+    const w = localStorage.getItem('mcu-watched');
+    const r = localStorage.getItem('mcu-ratings');
+    if(w) watched = new Set(JSON.parse(w));
+    if(r) ratings = JSON.parse(r);
+  }catch(e){ console.error('storage error', e); }
   storageReady = true;
   render();
 }
 async function saveWatched(){
-  try{ await window.storage.set('mcu-watched', JSON.stringify([...watched]), false); }
+  try{ localStorage.setItem('mcu-watched', JSON.stringify([...watched])); }
   catch(e){ console.error('storage error', e); }
 }
 async function saveRatings(){
-  try{ await window.storage.set('mcu-ratings', JSON.stringify(ratings), false); }
+  try{ localStorage.setItem('mcu-ratings', JSON.stringify(ratings)); }
   catch(e){ console.error('storage error', e); }
 }
 function rateMovie(id, value, ev){
